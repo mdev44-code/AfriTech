@@ -1,5 +1,5 @@
 {
-  "name": "afritech-tmp",
+  "name": "afritech",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,18 +9,28 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.2.10",
+    "@prisma/client": "^6.19.3",
+    "@radix-ui/react-slot": "^1.3.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.23.0",
+    "next": "15.5.20",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
+    "@eslint/eslintrc": "^3.3.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10",
     "eslint": "^9",
-    "eslint-config-next": "16.2.10",
-    "tailwindcss": "^4",
+    "eslint-config-next": "15.5.20",
+    "postcss": "^8",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^3",
     "typescript": "^5"
   }
 }

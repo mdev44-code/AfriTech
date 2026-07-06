@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir=false --import-alias \"@/*\" --use-npm --yes)",
+      "Bash(npx --yes create-next-app@latest --help)",
+      "Bash(npx --yes create-next-app@latest afritech-tmp --typescript --tailwind --eslint --app --import-alias \"@/*\" --use-npm --yes)",
+      "Bash(npm view *)",
+      "Bash(rm -rf node_modules package-lock.json .next)",
+      "Bash(npm install *)",
+      "Bash(npx --yes shadcn@latest init --help)",
+      "Bash(npx --yes shadcn@latest init --base radix --force)",
+      "Bash(npx --yes shadcn@latest init --base radix --force --reinstall -y)",
+      "Bash(npx --yes shadcn@3.8.5 init -y -d)",
+      "Bash(npx --yes shadcn@3.8.5 add button -y)",
+      "Bash(npx prisma *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)"
+    ]
+  }
+}
