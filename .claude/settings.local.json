@@ -14,7 +14,13 @@
       "Bash(npx --yes shadcn@3.8.5 add button -y)",
       "Bash(npx prisma *)",
       "Bash(npx tsc *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(python3 -c ' *)",
+      "Bash(node -e ' *)",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); console.log\\(typeof icons.CheckCircle2, typeof icons.Globe, typeof icons.BrainCircuit\\)\")"
     ]
   }
 }

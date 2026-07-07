@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Afritech
 
-## Getting Started
+Site web de **Afritech**, agence de création de logiciels web/mobile,
+d'automatisation et d'intégration d'IA — landing page publique et dashboard
+administrateur.
 
-First, run the development server:
+Design : fond noir, high-level, motion design soigné, 100% responsive.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack technique
+
+- [Next.js 15](https://nextjs.org) (App Router), TypeScript strict
+- [Tailwind CSS](https://tailwindcss.com) + [shadcn/ui](https://ui.shadcn.com) pour les composants de base
+- [Framer Motion](https://www.framer.com/motion/) pour les animations d'interface, [GSAP](https://gsap.com) + ScrollTrigger pour les animations liées au scroll
+- [Prisma ORM](https://www.prisma.io) + PostgreSQL
+- [React Hook Form](https://react-hook-form.com) + [Zod](https://zod.dev) pour la validation des formulaires
+- Déploiement cible : [Vercel](https://vercel.com)
+
+## État d'avancement
+
+- [x] Landing page — Header (glassmorphism au scroll, menu mobile plein écran)
+- [x] Landing page — Hero (animation en cascade, dégradé animé, badges flottants)
+- [x] Landing page — Bandeau de technologies en défilement infini
+- [x] Landing page — Services (cartes avec tilt 3D et glow au survol)
+- [x] Landing page — Process (timeline verticale animée au scroll avec GSAP)
+- [x] Landing page — Projets réalisés (grille filtrable par catégorie)
+- [x] Landing page — Pourquoi Afritech (compteurs animés)
+- [x] Landing page — FAQ (accordéon animé)
+- [x] Landing page — Contact (formulaire + coordonnées)
+- [x] Landing page — Footer (horloge de Dakar en temps réel, newsletter)
+- [x] Page `/devis` — formulaire multi-étapes (UI + validation, sans logique backend)
+- [x] Page `/rendez-vous` — calendrier de prise de rendez-vous (UI + validation, sans logique backend)
+- [ ] Modèle de données (Prisma)
+- [ ] Connexion des formulaires à une base de données / envoi d'emails
+- [ ] Authentification admin
+- [ ] Dashboard admin (Overview, CRUD Projets, devis, rendez-vous, CMS)
+- [ ] Déploiement
+
+## Structure du projet
+
+```
+/app
+  /(marketing)        → landing page publique (/, /devis, /rendez-vous)
+  /admin              → dashboard admin (à venir)
+  /api                → route handlers (à venir)
+/components
+  /ui                 → composants shadcn/ui de base
+  /marketing          → composants spécifiques à la landing page
+  /admin              → composants du dashboard (à venir)
+  /shared             → composants réutilisés partout (ex: Logo)
+/lib
+  /db.ts              → client Prisma
+  /data               → données mock (projets, disponibilités)
+  /validations        → schémas Zod
+/prisma
+  schema.prisma
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Prérequis
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Node.js 20+
+- Une base de données PostgreSQL (pour les phases à venir)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Installation
 
-## Learn More
+```bash
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Variables d'environnement
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Copier `.env.example` en `.env` et renseigner les valeurs nécessaires :
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cp .env.example .env
+```
 
-## Deploy on Vercel
+`.env` n'est jamais commité (voir `.gitignore`) et ne doit jamais être partagé.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Commandes utiles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev              # serveur de développement
+npm run build             # build de production
+npm run lint              # ESLint
+npx prisma studio         # explorer la base de données
+npx prisma migrate dev    # créer/appliquer une migration
+```
+
+Le serveur de développement est disponible sur [http://localhost:3000](http://localhost:3000).
+
+## Workflow Git
+
+Tout le développement se fait sur la branche `development`. Les mises en
+production vers `main` restent une décision manuelle.
+
+## Documentation projet
+
+Le fichier [`CLAUDE.md`](./CLAUDE.md) centralise les conventions de code, la
+palette de couleurs, les principes de motion design et les règles de sécurité
+du projet.

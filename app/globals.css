@@ -7,8 +7,6 @@
   --color-surface: #141419;
   --color-brand-blue: #153a63;
   --color-brand-blue-light: #2c6cb8;
-  --color-accent: #f2a93b;
-  --color-accent-hover: #ffc266;
   --color-text-primary: #f5f5f2;
   --color-text-secondary: #8a8f98;
 }
@@ -27,22 +25,22 @@
     --secondary-foreground: 60 13% 95%;
     --muted: 240 11% 9%;
     --muted-foreground: 219 6% 57%;
-    --accent: 36 88% 59%;
-    --accent-foreground: 240 9% 4%;
+    --accent: 212 65% 24%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 9% 16%;
     --input: 240 9% 16%;
-    --ring: 36 88% 59%;
+    --ring: 213 61% 45%;
     --radius: 0.5rem;
     --sidebar: 240 11% 9%;
     --sidebar-foreground: 60 13% 95%;
     --sidebar-primary: 213 61% 45%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 36 88% 59%;
-    --sidebar-accent-foreground: 240 9% 4%;
+    --sidebar-accent: 212 65% 24%;
+    --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 9% 16%;
-    --sidebar-ring: 36 88% 59%;
+    --sidebar-ring: 213 61% 45%;
   }
 }
 

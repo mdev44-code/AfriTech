@@ -1,3 +1,4 @@
+import { Footer } from "@/components/marketing/footer";
 import { Header } from "@/components/marketing/header";
 
 export default function MarketingLayout({
@@ -9,6 +10,7 @@ export default function MarketingLayout({
     <>
       <Header />
       <div className="pt-16">{children}</div>
+      <Footer />
     </>
   );
 }

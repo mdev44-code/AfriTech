@@ -18,7 +18,6 @@ const config: Config = {
   			},
   			accent: {
   				DEFAULT: 'hsl(var(--accent))',
-  				hover: '#FFC266',
   				foreground: 'hsl(var(--accent-foreground))'
   			},
   			text: {
@@ -71,6 +70,15 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		keyframes: {
+  			marquee: {
+  				'0%': { transform: 'translateX(0%)' },
+  				'100%': { transform: 'translateX(-50%)' }
+  			}
+  		},
+  		animation: {
+  			marquee: 'marquee 32s linear infinite'
   		}
   	}
   },
