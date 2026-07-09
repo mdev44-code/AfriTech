@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
@@ -31,6 +31,8 @@ export function DevisForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
   const {
@@ -60,8 +62,29 @@ export function DevisForm() {
     setCurrentStep((step) => Math.max(step - 1, 0));
   }
 
-  function onSubmit() {
-    setIsSubmitted(true);
+  async function onSubmit(values: DevisFormValues) {
+    setSubmitError(null);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/devis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error("request_failed");
+      }
+
+      setIsSubmitted(true);
+    } catch {
+      setSubmitError(
+        "Une erreur est survenue lors de l'envoi de votre demande. Merci de réessayer.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (isSubmitted) {
@@ -132,12 +155,16 @@ export function DevisForm() {
           </motion.div>
         </AnimatePresence>
 
+        {submitError ? (
+          <p className="mt-6 text-sm text-red-400">{submitError}</p>
+        ) : null}
+
         <div className="mt-10 flex items-center justify-between">
           <Button
             type="button"
             variant="outline"
             onClick={handleBack}
-            disabled={currentStep === 0}
+            disabled={currentStep === 0 || isSubmitting}
             className="border-brand-blue-light bg-transparent text-white hover:bg-brand-blue-light/10 hover:text-white disabled:opacity-30"
           >
             Précédent
@@ -146,9 +173,17 @@ export function DevisForm() {
           {isLastStep ? (
             <Button
               type="submit"
-              className="bg-brand-blue text-white hover:bg-brand-blue-light"
+              disabled={isSubmitting}
+              className="bg-brand-blue text-white hover:bg-brand-blue-light disabled:opacity-60"
             >
-              Envoyer la demande
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Envoi en cours...
+                </>
+              ) : (
+                "Envoyer la demande"
+              )}
             </Button>
           ) : (
             <Button
