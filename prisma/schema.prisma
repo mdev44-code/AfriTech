@@ -3,6 +3,135 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum QuoteRequestStatus {
+  PENDING
+  IN_PROGRESS
+  QUOTED
+  CLOSED
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum UserRole {
+  SUPERADMIN
+  ADMIN
+  EDITOR
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String        @unique
+  description  String
+  category     String
+  technologies String[]
+  images       String[]
+  demoUrl      String?
+  year         Int
+  status       ProjectStatus @default(DRAFT)
+  featured     Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([status, featured])
+  @@index([category])
+}
+
+model QuoteRequest {
+  id          String             @id @default(cuid())
+  projectType String
+  budget      String?
+  description String
+  name        String
+  email       String
+  phone       String?
+  status      QuoteRequestStatus @default(PENDING)
+  createdAt   DateTime           @default(now())
+
+  quote Quote?
+
+  @@index([status])
+  @@index([email])
+}
+
+model Quote {
+  id             String       @id @default(cuid())
+  quoteRequestId String       @unique
+  quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+  lines          QuoteLine[]
+  total          Decimal      @db.Decimal(10, 2)
+  status         QuoteStatus  @default(DRAFT)
+  sentAt         DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([status])
+}
+
+model QuoteLine {
+  id       String  @id @default(cuid())
+  quoteId  String
+  quote    Quote   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  label    String
+  price    Decimal @db.Decimal(10, 2)
+  quantity Int     @default(1)
+
+  @@index([quoteId])
+}
+
+model Appointment {
+  id          String            @id @default(cuid())
+  name        String
+  email       String
+  scheduledAt DateTime
+  status      AppointmentStatus @default(PENDING)
+  createdAt   DateTime          @default(now())
+
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+model Section {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  type      String
+  content   Json
+  visible   Boolean  @default(true)
+  order     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      UserRole @default(EDITOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
