@@ -18,3 +18,9 @@ export const RENDEZ_VOUS_CONTACT_DEFAULT_VALUES: RendezVousContactValues = {
   phone: "",
   message: "",
 };
+
+export const rendezVousBookingSchema = rendezVousContactSchema.extend({
+  scheduledAt: z.string().datetime({ message: "Créneau invalide." }),
+});
+
+export type RendezVousBookingValues = z.infer<typeof rendezVousBookingSchema>;

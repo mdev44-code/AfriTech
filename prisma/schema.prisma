@@ -106,12 +106,13 @@ model Appointment {
   id          String            @id @default(cuid())
   name        String
   email       String
-  scheduledAt DateTime
+  phone       String?
+  message     String?
+  scheduledAt DateTime          @unique
   status      AppointmentStatus @default(PENDING)
   createdAt   DateTime          @default(now())
 
   @@index([status])
-  @@index([scheduledAt])
 }
 
 model Section {

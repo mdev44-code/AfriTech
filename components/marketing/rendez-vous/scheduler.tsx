@@ -8,7 +8,7 @@ import {
   useReducedMotion,
   type Variants,
 } from "framer-motion";
-import { CalendarCheck, CheckCircle2 } from "lucide-react";
+import { CalendarCheck, CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
@@ -41,12 +41,28 @@ function formatSelectedSlot(day: AvailabilityDay, time: string) {
   return `${label} à ${time}`;
 }
 
+function buildScheduledAtIso(day: AvailabilityDay, time: string): string {
+  const [hours, minutes] = time.split(":").map(Number);
+  const scheduledAt = new Date(
+    Date.UTC(
+      day.date.getFullYear(),
+      day.date.getMonth(),
+      day.date.getDate(),
+      hours,
+      minutes,
+    ),
+  );
+  return scheduledAt.toISOString();
+}
+
 export function Scheduler() {
   const [days] = useState<AvailabilityDay[]>(() => generateAvailability(14));
   const [step, setStep] = useState<Step>("calendar");
   const [direction, setDirection] = useState(1);
   const [selectedDate, setSelectedDate] = useState<AvailabilityDay | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
   const {
@@ -62,6 +78,7 @@ export function Scheduler() {
   function handleSelectDay(day: AvailabilityDay) {
     setSelectedDate(day);
     setSelectedTime(null);
+    setSubmitError(null);
   }
 
   function handleContinue() {
@@ -71,12 +88,50 @@ export function Scheduler() {
 
   function handleBack() {
     setDirection(-1);
+    setSubmitError(null);
     setStep("calendar");
   }
 
-  function onSubmit() {
-    setDirection(1);
-    setStep("success");
+  async function onSubmit(values: RendezVousContactValues) {
+    if (!selectedDate || !selectedTime) return;
+
+    setSubmitError(null);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/rendez-vous", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...values,
+          scheduledAt: buildScheduledAtIso(selectedDate, selectedTime),
+        }),
+      });
+
+      if (response.status === 409) {
+        const data = await response.json().catch(() => null);
+        setSelectedTime(null);
+        setDirection(-1);
+        setStep("calendar");
+        setSubmitError(
+          data?.error ?? "Ce créneau vient d'être réservé. Merci d'en choisir un autre.",
+        );
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("request_failed");
+      }
+
+      setDirection(1);
+      setStep("success");
+    } catch {
+      setSubmitError(
+        "Une erreur est survenue lors de l'envoi de votre demande. Merci de réessayer.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (step === "success" && selectedDate && selectedTime) {
@@ -152,6 +207,10 @@ export function Scheduler() {
                   Créneaux disponibles sur les deux prochaines semaines.
                 </p>
 
+                {submitError ? (
+                  <p className="mt-4 text-sm text-red-400">{submitError}</p>
+                ) : null}
+
                 <div className="mt-6">
                   <DayPicker
                     days={days}
@@ -174,7 +233,12 @@ export function Scheduler() {
                 ) : null}
               </div>
             ) : (
-              <ContactStep register={register} errors={errors} />
+              <>
+                <ContactStep register={register} errors={errors} />
+                {submitError ? (
+                  <p className="mt-4 text-sm text-red-400">{submitError}</p>
+                ) : null}
+              </>
             )}
           </motion.div>
         </AnimatePresence>
@@ -185,7 +249,8 @@ export function Scheduler() {
               type="button"
               variant="outline"
               onClick={handleBack}
-              className="border-brand-blue-light bg-transparent text-white hover:bg-brand-blue-light/10 hover:text-white"
+              disabled={isSubmitting}
+              className="border-brand-blue-light bg-transparent text-white hover:bg-brand-blue-light/10 hover:text-white disabled:opacity-30"
             >
               Précédent
             </Button>
@@ -205,9 +270,17 @@ export function Scheduler() {
           ) : (
             <Button
               type="submit"
-              className="bg-brand-blue text-white hover:bg-brand-blue-light"
+              disabled={isSubmitting}
+              className="bg-brand-blue text-white hover:bg-brand-blue-light disabled:opacity-60"
             >
-              Confirmer le rendez-vous
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Envoi en cours...
+                </>
+              ) : (
+                "Confirmer le rendez-vous"
+              )}
             </Button>
           )}
         </div>
