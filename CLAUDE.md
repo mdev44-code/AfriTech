@@ -140,11 +140,11 @@ npx prisma migrate dev    # créer/appliquer une migration
 ## État du projet
 
 _(à mettre à jour au fil de l'avancement)_
-- [ ] Phase 0 — Setup
-- [ ] Phase 1 — Landing page statique
-- [ ] Phase 2 — Modèle de données
-- [ ] Phase 3 — Formulaires connectés
-- [ ] Phase 4 — Authentification admin
+- [x] Phase 0 — Setup
+- [x] Phase 1 — Landing page statique
+- [x] Phase 2 — Modèle de données
+- [x] Phase 3 — Formulaires connectés
+- [x] Phase 4 — Authentification admin
 - [ ] Phase 5 — Dashboard : structure + Overview
 - [ ] Phase 6 — CRUD Projets
 - [ ] Phase 7 — Gestion des devis
