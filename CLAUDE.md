@@ -147,7 +147,7 @@ _(à mettre à jour au fil de l'avancement)_
 - [x] Phase 4 — Authentification admin
 - [x] Phase 5 — Dashboard : structure + Overview
 - [ ] Phase 6 — CRUD Projets
-- [ ] Phase 7 — Gestion des devis
+- [x] Phase 7 — Gestion des devis
 - [ ] Phase 8 — Gestion des rendez-vous
 - [ ] Phase 9 — CMS dynamique des sections
 - [ ] Phase 10 — Polish, performance, SEO, QA
