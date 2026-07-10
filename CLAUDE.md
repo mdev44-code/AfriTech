@@ -145,7 +145,7 @@ _(à mettre à jour au fil de l'avancement)_
 - [x] Phase 2 — Modèle de données
 - [x] Phase 3 — Formulaires connectés
 - [x] Phase 4 — Authentification admin
-- [ ] Phase 5 — Dashboard : structure + Overview
+- [x] Phase 5 — Dashboard : structure + Overview
 - [ ] Phase 6 — CRUD Projets
 - [ ] Phase 7 — Gestion des devis
 - [ ] Phase 8 — Gestion des rendez-vous
