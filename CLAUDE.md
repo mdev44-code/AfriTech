@@ -149,6 +149,6 @@ _(à mettre à jour au fil de l'avancement)_
 - [ ] Phase 6 — CRUD Projets
 - [x] Phase 7 — Gestion des devis
 - [x] Phase 8 — Gestion des rendez-vous
-- [ ] Phase 9 — CMS dynamique des sections
+- [x] Phase 9 — CMS dynamique des sections
 - [ ] Phase 10 — Polish, performance, SEO, QA
 - [ ] Phase 11 — Déploiement
