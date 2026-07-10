@@ -83,6 +83,7 @@ model Quote {
   quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
   lines          QuoteLine[]
   total          Decimal      @db.Decimal(10, 2)
+  conditions     String?      @db.Text
   status         QuoteStatus  @default(DRAFT)
   sentAt         DateTime?
   createdAt      DateTime     @default(now())
