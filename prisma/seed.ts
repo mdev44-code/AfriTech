@@ -236,8 +236,8 @@ async function main() {
   await prisma.section.createMany({
     data: [
       {
-        name: "hero",
-        type: "Hero",
+        name: "Hero",
+        type: "hero",
         order: 1,
         visible: true,
         content: {
@@ -247,9 +247,16 @@ async function main() {
         },
       },
       {
-        name: "services",
-        type: "Services",
+        name: "Bandeau technologies",
+        type: "tech-marquee",
         order: 2,
+        visible: true,
+        content: {},
+      },
+      {
+        name: "Nos services",
+        type: "services",
+        order: 3,
         visible: true,
         content: {
           items: [
@@ -261,9 +268,9 @@ async function main() {
         },
       },
       {
-        name: "process",
-        type: "Process",
-        order: 3,
+        name: "Notre process",
+        type: "process",
+        order: 4,
         visible: true,
         content: {
           steps: [
@@ -275,16 +282,23 @@ async function main() {
         },
       },
       {
-        name: "projects",
-        type: "Projects",
-        order: 4,
+        name: "Projets",
+        type: "projects",
+        order: 5,
         visible: true,
         content: { limit: 6, filterFeatured: true },
       },
       {
-        name: "faq",
-        type: "FAQ",
-        order: 5,
+        name: "Pourquoi Afritech",
+        type: "why-afritech",
+        order: 6,
+        visible: true,
+        content: {},
+      },
+      {
+        name: "FAQ",
+        type: "faq",
+        order: 7,
         visible: true,
         content: {
           items: [
@@ -294,23 +308,11 @@ async function main() {
         },
       },
       {
-        name: "contact",
-        type: "Contact",
-        order: 6,
+        name: "Contact",
+        type: "contact",
+        order: 8,
         visible: true,
         content: { email: "contact@afritech.dev", phone: "+221338001122" },
-      },
-      {
-        name: "footer",
-        type: "Footer",
-        order: 7,
-        visible: true,
-        content: {
-          links: [
-            { label: "Mentions légales", href: "/mentions-legales" },
-            { label: "Politique de confidentialité", href: "/confidentialite" },
-          ],
-        },
       },
     ],
   });
