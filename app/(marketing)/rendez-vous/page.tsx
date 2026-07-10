@@ -1,6 +1,9 @@
 import { Scheduler } from "@/components/marketing/rendez-vous/scheduler";
+import { generateAvailability } from "@/lib/data/availability";
 
-export default function RendezVousPage() {
+export default async function RendezVousPage() {
+  const initialDays = await generateAvailability(14);
+
   return (
     <main className="flex flex-1 flex-col bg-background px-6 py-24">
       <div className="mx-auto w-full max-w-2xl">
@@ -15,7 +18,7 @@ export default function RendezVousPage() {
         </div>
 
         <div className="mt-12">
-          <Scheduler />
+          <Scheduler initialDays={initialDays} />
         </div>
       </div>
     </main>

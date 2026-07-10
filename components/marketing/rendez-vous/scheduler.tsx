@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { generateAvailability, type AvailabilityDay } from "@/lib/data/availability";
+import type { AvailabilityDay } from "@/lib/data/availability";
 import {
   RENDEZ_VOUS_CONTACT_DEFAULT_VALUES,
   rendezVousContactSchema,
@@ -55,8 +55,12 @@ function buildScheduledAtIso(day: AvailabilityDay, time: string): string {
   return scheduledAt.toISOString();
 }
 
-export function Scheduler() {
-  const [days] = useState<AvailabilityDay[]>(() => generateAvailability(14));
+interface SchedulerProps {
+  initialDays: AvailabilityDay[];
+}
+
+export function Scheduler({ initialDays }: SchedulerProps) {
+  const [days] = useState<AvailabilityDay[]>(initialDays);
   const [step, setStep] = useState<Step>("calendar");
   const [direction, setDirection] = useState(1);
   const [selectedDate, setSelectedDate] = useState<AvailabilityDay | null>(null);
