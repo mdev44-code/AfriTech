@@ -7,6 +7,7 @@ import { ArrowUpRight, Bot, Globe, Smartphone, Workflow, type LucideIcon } from 
 
 import { cn } from "@/lib/utils";
 import { PROJECTS, type ProjectCategory } from "@/lib/data/projects";
+import { BUILTIN_DEFAULT_CONTENT } from "@/lib/sections/builtin-defaults";
 
 type Filter = "Tous" | ProjectCategory;
 
@@ -19,7 +20,12 @@ const CATEGORY_ICON: Record<ProjectCategory, LucideIcon> = {
   IA: Bot,
 };
 
-export function Projects() {
+interface ProjectsProps {
+  title?: string;
+  description?: string;
+}
+
+export function Projects({ title, description }: ProjectsProps) {
   const [activeFilter, setActiveFilter] = useState<Filter>("Tous");
 
   const filteredProjects = useMemo(
@@ -38,11 +44,10 @@ export function Projects() {
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-text-primary sm:text-4xl">
-            Projets réalisés
+            {title ?? BUILTIN_DEFAULT_CONTENT.projects!.title}
           </h2>
           <p className="mt-4 text-text-secondary">
-            Un aperçu des produits que nous concevons pour nos clients, tous
-            secteurs confondus.
+            {description ?? BUILTIN_DEFAULT_CONTENT.projects!.description}
           </p>
         </div>
 

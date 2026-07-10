@@ -4,6 +4,8 @@ import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
+import { BUILTIN_DEFAULT_CONTENT } from "@/lib/sections/builtin-defaults";
+
 interface FaqItem {
   question: string;
   answer: string;
@@ -58,7 +60,12 @@ const itemVariants: Variants = {
   },
 };
 
-export function Faq() {
+interface FaqProps {
+  title?: string;
+  description?: string;
+}
+
+export function Faq({ title, description }: FaqProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
@@ -67,10 +74,10 @@ export function Faq() {
       <div className="mx-auto max-w-3xl">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-text-primary sm:text-4xl">
-            Questions fréquentes
+            {title ?? BUILTIN_DEFAULT_CONTENT.faq!.title}
           </h2>
           <p className="mt-4 text-text-secondary">
-            Tout ce qu&apos;il faut savoir avant de démarrer votre projet.
+            {description ?? BUILTIN_DEFAULT_CONTENT.faq!.description}
           </p>
         </div>
 

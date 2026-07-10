@@ -9,6 +9,8 @@ import {
 } from "framer-motion";
 import { Award, Clock3, Layers, Users, type LucideIcon } from "lucide-react";
 
+import { BUILTIN_DEFAULT_CONTENT } from "@/lib/sections/builtin-defaults";
+
 interface Differentiator {
   icon: LucideIcon;
   value: number;
@@ -109,7 +111,12 @@ function Counter({
   );
 }
 
-export function WhyAfritech() {
+interface WhyAfritechProps {
+  title?: string;
+  description?: string;
+}
+
+export function WhyAfritech({ title, description }: WhyAfritechProps) {
   const [isInView, setIsInView] = useState(false);
 
   return (
@@ -120,10 +127,10 @@ export function WhyAfritech() {
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-text-primary sm:text-4xl">
-            Pourquoi Afritech
+            {title ?? BUILTIN_DEFAULT_CONTENT["why-afritech"]!.title}
           </h2>
           <p className="mt-4 text-text-secondary">
-            Ce qui distingue notre approche, en quelques chiffres.
+            {description ?? BUILTIN_DEFAULT_CONTENT["why-afritech"]!.description}
           </p>
         </div>
 

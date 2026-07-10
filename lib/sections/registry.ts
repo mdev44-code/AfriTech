@@ -10,7 +10,15 @@ import { TechMarquee } from "@/components/marketing/tech-marquee";
 import { WhyAfritech } from "@/components/marketing/why-afritech";
 import type { BuiltinSectionType } from "@/lib/validations/sections";
 
-export const BUILTIN_SECTION_REGISTRY: Record<BuiltinSectionType, ComponentType> = {
+export interface BuiltinSectionProps {
+  title?: string;
+  description?: string;
+}
+
+export const BUILTIN_SECTION_REGISTRY: Record<
+  BuiltinSectionType,
+  ComponentType<BuiltinSectionProps>
+> = {
   hero: Hero,
   "tech-marquee": TechMarquee,
   services: Services,

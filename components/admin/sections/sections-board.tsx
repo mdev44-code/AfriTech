@@ -19,11 +19,12 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Plus, Trash2 } from "lucide-react";
+import { GripVertical, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { CreateSectionForm } from "@/components/admin/sections/create-section-form";
+import { EditBuiltinSectionForm } from "@/components/admin/sections/edit-builtin-section-form";
 import { cn } from "@/lib/utils";
 import {
   deleteCustomSection,
@@ -31,6 +32,7 @@ import {
   toggleSectionVisibility,
 } from "@/lib/actions/sections";
 import { BUILTIN_SECTION_LABELS, isBuiltinSectionType } from "@/lib/sections/registry";
+import { isEditableBuiltinType } from "@/lib/sections/builtin-defaults";
 import { CUSTOM_SECTION_TEMPLATES, isCustomSectionType } from "@/lib/validations/sections";
 
 function sectionLabel(section: Section): string {
@@ -43,14 +45,16 @@ interface SortableRowProps {
   section: Section;
   onToggle: (id: string, visible: boolean) => void;
   onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
   isPending: boolean;
 }
 
-function SortableRow({ section, onToggle, onDelete, isPending }: SortableRowProps) {
+function SortableRow({ section, onToggle, onDelete, onEdit, isPending }: SortableRowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: section.id,
   });
   const isCustom = isCustomSectionType(section.type);
+  const isEditable = isBuiltinSectionType(section.type) && isEditableBuiltinType(section.type);
 
   return (
     <div
@@ -86,6 +90,18 @@ function SortableRow({ section, onToggle, onDelete, isPending }: SortableRowProp
         aria-label={`${section.visible ? "Masquer" : "Afficher"} la section ${section.name}`}
       />
 
+      {isEditable && (
+        <button
+          type="button"
+          disabled={isPending}
+          onClick={() => onEdit(section.id)}
+          aria-label={`Modifier le texte de la section ${section.name}`}
+          className="text-text-secondary transition-colors hover:text-text-primary disabled:opacity-50"
+        >
+          <Pencil className="h-4 w-4" />
+        </button>
+      )}
+
       {isCustom && (
         <button
           type="button"
@@ -110,6 +126,7 @@ export function SectionsBoard({ initialSections }: SectionsBoardProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     setSections(initialSections);
@@ -176,13 +193,24 @@ export function SectionsBoard({ initialSections }: SectionsBoardProps) {
         <SortableContext items={sections.map((s) => s.id)} strategy={verticalListSortingStrategy}>
           <div className="space-y-2">
             {sections.map((section) => (
-              <SortableRow
-                key={section.id}
-                section={section}
-                onToggle={handleToggle}
-                onDelete={handleDelete}
-                isPending={isPending}
-              />
+              <div key={section.id} className="space-y-2">
+                <SortableRow
+                  section={section}
+                  onToggle={handleToggle}
+                  onDelete={handleDelete}
+                  onEdit={(id) => setEditingId(id)}
+                  isPending={isPending}
+                />
+                {editingId === section.id && isBuiltinSectionType(section.type) && (
+                  <EditBuiltinSectionForm
+                    sectionId={section.id}
+                    type={section.type}
+                    currentContent={section.content}
+                    onSaved={() => setEditingId(null)}
+                    onCancel={() => setEditingId(null)}
+                  />
+                )}
+              </div>
             ))}
           </div>
         </SortableContext>

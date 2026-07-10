@@ -1,10 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import type { Prisma } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { getNextSectionOrder } from "@/lib/data/sections";
+import { isBuiltinSectionType } from "@/lib/sections/registry";
 import {
+  builtinContentSchema,
   createSectionSchema,
   CUSTOM_SECTION_TEMPLATES,
   isCustomSectionType,
@@ -72,6 +75,70 @@ export async function createCustomSection(
       order,
       visible: true,
     },
+  });
+
+  revalidateSections();
+  return { success: true };
+}
+
+export async function updateBuiltinSectionContent(
+  id: string,
+  input: { title?: string; description?: string }
+): Promise<ActionResult> {
+  const section = await db.section.findUnique({ where: { id } });
+  if (!section) {
+    return { success: false, error: "Section introuvable." };
+  }
+  if (!isBuiltinSectionType(section.type)) {
+    return {
+      success: false,
+      error: "Cette section n'est pas modifiable de cette façon.",
+    };
+  }
+
+  const parsed = builtinContentSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: parsed.error.issues[0]?.message ?? "Contenu invalide.",
+    };
+  }
+
+  const existingContent =
+    section.content && typeof section.content === "object" && !Array.isArray(section.content)
+      ? (section.content as Record<string, unknown>)
+      : {};
+
+  await db.section.update({
+    where: { id },
+    data: { content: { ...existingContent, ...parsed.data } },
+  });
+
+  revalidateSections();
+  return { success: true };
+}
+
+export async function resetBuiltinSectionContent(id: string): Promise<ActionResult> {
+  const section = await db.section.findUnique({ where: { id } });
+  if (!section) {
+    return { success: false, error: "Section introuvable." };
+  }
+  if (!isBuiltinSectionType(section.type)) {
+    return {
+      success: false,
+      error: "Cette section n'est pas modifiable de cette façon.",
+    };
+  }
+
+  const existingContent =
+    section.content && typeof section.content === "object" && !Array.isArray(section.content)
+      ? (section.content as Record<string, unknown>)
+      : {};
+  const { title: _title, description: _description, ...rest } = existingContent;
+
+  await db.section.update({
+    where: { id },
+    data: { content: rest as Prisma.InputJsonValue },
   });
 
   revalidateSections();

@@ -5,9 +5,7 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-
-const TITLE_LINE_1 = "Des logiciels sur-mesure,";
-const TITLE_LINE_2 = "propulsés par l'IA.";
+import { BUILTIN_DEFAULT_CONTENT } from "@/lib/sections/builtin-defaults";
 
 const FLOATING_BADGES = [
   { label: "Web", className: "left-[6%] top-[22%]", duration: 6 },
@@ -48,8 +46,15 @@ function CascadingLine({ text }: { text: string }) {
   );
 }
 
-export function Hero() {
+interface HeroProps {
+  title?: string;
+  description?: string;
+}
+
+export function Hero({ title, description }: HeroProps) {
   const prefersReducedMotion = useReducedMotion();
+  const titleLines = (title ?? BUILTIN_DEFAULT_CONTENT.hero!.title).split("\n");
+  const subtitle = description ?? BUILTIN_DEFAULT_CONTENT.hero!.description;
 
   return (
     <section className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden px-6">
@@ -113,8 +118,9 @@ export function Hero() {
         viewport={{ once: true }}
         className="max-w-4xl text-center text-5xl font-bold leading-tight tracking-tight text-text-primary sm:text-6xl lg:text-7xl"
       >
-        <CascadingLine text={TITLE_LINE_1} />
-        <CascadingLine text={TITLE_LINE_2} />
+        {titleLines.map((line) => (
+          <CascadingLine key={line} text={line} />
+        ))}
       </motion.h1>
 
       <motion.p
@@ -124,8 +130,7 @@ export function Hero() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
         className="mt-6 max-w-2xl text-center text-lg text-text-secondary sm:text-xl"
       >
-        Afritech conçoit des applications web et mobiles, automatise vos
-        processus et intègre l&apos;IA pour accélérer votre croissance.
+        {subtitle}
       </motion.p>
 
       <motion.div

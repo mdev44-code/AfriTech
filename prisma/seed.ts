@@ -240,11 +240,7 @@ async function main() {
         type: "hero",
         order: 1,
         visible: true,
-        content: {
-          title: "On construit vos logiciels, sites et automatisations",
-          subtitle: "Agence de création web/mobile, automatisation et intégration IA",
-          ctaLabel: "Demander un devis",
-        },
+        content: {},
       },
       {
         name: "Bandeau technologies",

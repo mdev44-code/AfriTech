@@ -13,6 +13,21 @@ export const BUILTIN_SECTION_TYPES = [
 
 export type BuiltinSectionType = (typeof BUILTIN_SECTION_TYPES)[number];
 
+export const builtinContentSchema = z.object({
+  title: z
+    .string()
+    .min(1, "Le titre est requis.")
+    .max(200, "Le titre est limité à 200 caractères.")
+    .optional(),
+  description: z
+    .string()
+    .min(1, "La description est requise.")
+    .max(500, "La description est limitée à 500 caractères.")
+    .optional(),
+});
+
+export type BuiltinContent = z.infer<typeof builtinContentSchema>;
+
 export const richTextContentSchema = z.object({
   title: z.string().min(2, "Le titre est requis."),
   body: z

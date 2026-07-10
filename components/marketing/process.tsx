@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import { BUILTIN_DEFAULT_CONTENT } from "@/lib/sections/builtin-defaults";
+
 interface Step {
   number: string;
   title: string;
@@ -43,7 +45,12 @@ const STEPS: Step[] = [
   },
 ];
 
-export function Process() {
+interface ProcessProps {
+  title?: string;
+  description?: string;
+}
+
+export function Process({ title, description }: ProcessProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<(HTMLLIElement | null)[]>([]);
@@ -109,11 +116,10 @@ export function Process() {
       <div className="mx-auto max-w-3xl">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-text-primary sm:text-4xl">
-            Notre process
+            {title ?? BUILTIN_DEFAULT_CONTENT.process!.title}
           </h2>
           <p className="mt-4 text-text-secondary">
-            Une méthode claire, en 5 étapes, du premier échange jusqu&apos;au
-            support continu.
+            {description ?? BUILTIN_DEFAULT_CONTENT.process!.description}
           </p>
         </div>
 

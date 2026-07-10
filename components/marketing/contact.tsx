@@ -16,8 +16,14 @@ import {
   contactSchema,
   type ContactFormValues,
 } from "@/lib/validations/contact";
+import { BUILTIN_DEFAULT_CONTENT } from "@/lib/sections/builtin-defaults";
 
-export function Contact() {
+interface ContactProps {
+  title?: string;
+  description?: string;
+}
+
+export function Contact({ title, description }: ContactProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const {
@@ -42,12 +48,10 @@ export function Contact() {
       <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-2 lg:gap-12">
         <div>
           <h2 className="text-3xl font-bold text-text-primary sm:text-4xl">
-            Discutons de votre projet
+            {title ?? BUILTIN_DEFAULT_CONTENT.contact!.title}
           </h2>
           <p className="mt-4 max-w-md text-text-secondary">
-            Une question, un besoin précis ou juste envie d&apos;échanger ?
-            Écrivez-nous, ou passez directement par l&apos;une de nos
-            démarches dédiées.
+            {description ?? BUILTIN_DEFAULT_CONTENT.contact!.description}
           </p>
 
           <ul className="mt-8 space-y-4 text-sm text-text-secondary">

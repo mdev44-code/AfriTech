@@ -11,6 +11,8 @@ import {
 } from "framer-motion";
 import { BrainCircuit, Code2, Smartphone, Workflow, type LucideIcon } from "lucide-react";
 
+import { BUILTIN_DEFAULT_CONTENT } from "@/lib/sections/builtin-defaults";
+
 interface Service {
   icon: LucideIcon;
   title: string;
@@ -126,7 +128,12 @@ function ServiceCard({ icon: Icon, title, description }: Service) {
   );
 }
 
-export function Services() {
+interface ServicesProps {
+  title?: string;
+  description?: string;
+}
+
+export function Services({ title, description }: ServicesProps) {
   return (
     <section
       id="services"
@@ -135,11 +142,10 @@ export function Services() {
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-text-primary sm:text-4xl">
-            Nos services
+            {title ?? BUILTIN_DEFAULT_CONTENT.services!.title}
           </h2>
           <p className="mt-4 text-text-secondary">
-            Des solutions complètes pour transformer vos idées en produits
-            digitaux performants.
+            {description ?? BUILTIN_DEFAULT_CONTENT.services!.description}
           </p>
         </div>
 

@@ -5,6 +5,7 @@ import { ImageTextSection } from "@/components/marketing/sections/image-text-sec
 import { RichTextSection } from "@/components/marketing/sections/rich-text-section";
 import { BUILTIN_SECTION_REGISTRY, isBuiltinSectionType } from "@/lib/sections/registry";
 import {
+  builtinContentSchema,
   ctaContentSchema,
   imageTextContentSchema,
   richTextContentSchema,
@@ -13,7 +14,13 @@ import {
 export function SectionRenderer({ section }: { section: Section }) {
   if (isBuiltinSectionType(section.type)) {
     const BuiltinComponent = BUILTIN_SECTION_REGISTRY[section.type];
-    return <BuiltinComponent />;
+    const parsed = builtinContentSchema.safeParse(section.content);
+    return (
+      <BuiltinComponent
+        title={parsed.success ? parsed.data.title : undefined}
+        description={parsed.success ? parsed.data.description : undefined}
+      />
+    );
   }
 
   switch (section.type) {
