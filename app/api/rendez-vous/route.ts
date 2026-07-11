@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 
 import { renderRendezVousConfirmationEmail } from "@/lib/email/rendez-vous-confirmation";
+import { getLogoAttachment } from "@/lib/email/logo-attachment";
 import { db } from "@/lib/db";
 import { getResendClient } from "@/lib/resend";
 import { rendezVousBookingSchema } from "@/lib/validations/rendez-vous";
@@ -67,6 +68,7 @@ export async function POST(request: Request) {
 
   if (resend) {
     try {
+      const logoAttachment = getLogoAttachment();
       const { error } = await resend.emails.send({
         from: process.env.EMAIL_FROM ?? "Afritech <onboarding@resend.dev>",
         to: email,
@@ -75,6 +77,7 @@ export async function POST(request: Request) {
           fullName,
           scheduledAt: scheduledDate,
         }),
+        attachments: logoAttachment ? [logoAttachment] : undefined,
       });
 
       if (error) {

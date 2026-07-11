@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { renderDevisConfirmationEmail } from "@/lib/email/devis-confirmation";
+import { getLogoAttachment } from "@/lib/email/logo-attachment";
 import { db } from "@/lib/db";
 import { getResendClient } from "@/lib/resend";
 import { devisFormSchema, PROJECT_TYPES } from "@/lib/validations/devis";
@@ -56,11 +57,13 @@ export async function POST(request: Request) {
       PROJECT_TYPES.find((type) => type.value === projectType)?.label ?? projectType;
 
     try {
+      const logoAttachment = getLogoAttachment();
       const { error } = await resend.emails.send({
         from: process.env.EMAIL_FROM ?? "Afritech <onboarding@resend.dev>",
         to: email,
         subject: "Votre demande de devis a bien été reçue",
         html: renderDevisConfirmationEmail({ fullName, projectTypeLabel }),
+        attachments: logoAttachment ? [logoAttachment] : undefined,
       });
 
       if (error) {

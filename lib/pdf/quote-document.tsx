@@ -13,7 +13,7 @@ import fs from "node:fs";
 
 import type { Quote, QuoteLine, QuoteRequest } from "@prisma/client";
 
-import { getBudgetLabel, getProjectTypeLabel } from "@/lib/data/devis";
+import { getProjectTypeLabel } from "@/lib/data/devis";
 import { formatCurrency } from "@/lib/currency";
 
 // Avoids a network fetch to react-pdf's default hyphenation dictionary.
@@ -227,11 +227,6 @@ function QuoteDocument({ quote, quoteRequest }: QuoteDocumentProps) {
             <View style={styles.infoBlock}>
               <Text style={styles.sectionTitle}>Projet</Text>
               <Text style={styles.infoText}>{getProjectTypeLabel(quoteRequest.projectType)}</Text>
-              {quoteRequest.budget ? (
-                <Text style={styles.infoMuted}>
-                  Budget indicatif : {getBudgetLabel(quoteRequest.budget)}
-                </Text>
-              ) : null}
             </View>
           </View>
 

@@ -8,6 +8,7 @@ import { generateQuotePdf } from "@/lib/pdf/quote-document";
 import { renderQuoteSentEmail } from "@/lib/email/quote-sent";
 import { quoteFormSchema, type QuoteFormValues } from "@/lib/validations/quote";
 import { formatCurrency } from "@/lib/currency";
+import { getLogoAttachment } from "@/lib/email/logo-attachment";
 
 export interface ActionResult {
   success: boolean;
@@ -106,6 +107,7 @@ export async function sendQuote(quoteRequestId: string): Promise<ActionResult> {
   const pdfBuffer = await generateQuotePdf(quoteRequest.quote, quoteRequest);
   const reference = `DEVIS-${quoteRequest.quote.id.slice(-8).toUpperCase()}`;
   const total = formatCurrency(Number(quoteRequest.quote.total), quoteRequest.quote.currency);
+  const logoAttachment = getLogoAttachment();
 
   try {
     const { error } = await resend.emails.send({
@@ -122,6 +124,7 @@ export async function sendQuote(quoteRequestId: string): Promise<ActionResult> {
           filename: `${reference}.pdf`,
           content: pdfBuffer,
         },
+        ...(logoAttachment ? [logoAttachment] : []),
       ],
     });
 

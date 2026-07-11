@@ -6,6 +6,7 @@ import type { AppointmentStatus } from "@prisma/client";
 import { db } from "@/lib/db";
 import { getResendClient } from "@/lib/resend";
 import { renderRendezVousCancellationEmail } from "@/lib/email/rendez-vous-cancellation";
+import { getLogoAttachment } from "@/lib/email/logo-attachment";
 
 export interface ActionResult {
   success: boolean;
@@ -59,6 +60,7 @@ export async function cancelAppointment(appointmentId: string): Promise<ActionRe
   const resend = getResendClient();
   if (resend) {
     try {
+      const logoAttachment = getLogoAttachment();
       const { error } = await resend.emails.send({
         from: process.env.EMAIL_FROM ?? "Afritech <onboarding@resend.dev>",
         to: appointment.email,
@@ -67,6 +69,7 @@ export async function cancelAppointment(appointmentId: string): Promise<ActionRe
           fullName: appointment.name,
           scheduledAt: appointment.scheduledAt,
         }),
+        attachments: logoAttachment ? [logoAttachment] : undefined,
       });
 
       if (error) {
