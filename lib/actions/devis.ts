@@ -108,7 +108,7 @@ export async function sendQuote(quoteRequestId: string): Promise<ActionResult> {
   }).format(Number(quoteRequest.quote.total));
 
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: process.env.EMAIL_FROM ?? "Afritech <onboarding@resend.dev>",
       to: quoteRequest.email,
       subject: `Votre devis Afritech ${reference}`,
@@ -124,6 +124,11 @@ export async function sendQuote(quoteRequestId: string): Promise<ActionResult> {
         },
       ],
     });
+
+    if (error) {
+      console.error("[actions/devis] Échec de l'envoi du devis", error);
+      return { success: false, error: "Échec de l'envoi de l'email." };
+    }
   } catch (error) {
     console.error("[actions/devis] Échec de l'envoi du devis", error);
     return { success: false, error: "Échec de l'envoi de l'email." };

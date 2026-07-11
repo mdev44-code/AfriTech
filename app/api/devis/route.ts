@@ -56,12 +56,16 @@ export async function POST(request: Request) {
       PROJECT_TYPES.find((type) => type.value === projectType)?.label ?? projectType;
 
     try {
-      await resend.emails.send({
+      const { error } = await resend.emails.send({
         from: process.env.EMAIL_FROM ?? "Afritech <onboarding@resend.dev>",
         to: email,
         subject: "Votre demande de devis a bien été reçue",
         html: renderDevisConfirmationEmail({ fullName, projectTypeLabel }),
       });
+
+      if (error) {
+        console.error("[api/devis] Échec de l'envoi de l'email de confirmation", error);
+      }
     } catch (error) {
       console.error("[api/devis] Échec de l'envoi de l'email de confirmation", error);
     }

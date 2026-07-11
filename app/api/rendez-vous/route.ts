@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
   if (resend) {
     try {
-      await resend.emails.send({
+      const { error } = await resend.emails.send({
         from: process.env.EMAIL_FROM ?? "Afritech <onboarding@resend.dev>",
         to: email,
         subject: "Votre rendez-vous est confirmé",
@@ -76,6 +76,13 @@ export async function POST(request: Request) {
           scheduledAt: scheduledDate,
         }),
       });
+
+      if (error) {
+        console.error(
+          "[api/rendez-vous] Échec de l'envoi de l'email de confirmation",
+          error,
+        );
+      }
     } catch (error) {
       console.error(
         "[api/rendez-vous] Échec de l'envoi de l'email de confirmation",

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -20,12 +20,6 @@ import { StepBudget } from "./steps/step-budget";
 import { StepContact } from "./steps/step-contact";
 import { StepDescription } from "./steps/step-description";
 import { StepProjectType } from "./steps/step-project-type";
-
-const stepVariants: Variants = {
-  enter: (direction: number) => ({ x: direction >= 0 ? 32 : -32, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (direction: number) => ({ x: direction >= 0 ? -32 : 32, opacity: 0 }),
-};
 
 export function DevisForm() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -122,19 +116,16 @@ export function DevisForm() {
         noValidate
         className="mt-10 overflow-hidden"
       >
-        <AnimatePresence
-          mode="wait"
-          custom={direction}
-          initial={false}
-        >
+        <AnimatePresence initial={false}>
           <motion.div
             key={currentStep}
-            custom={direction}
-            variants={prefersReducedMotion ? undefined : stepVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ x: direction >= 0 ? 32 : -32, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: direction >= 0 ? -32 : 32, opacity: 0 }}
+            transition={{
+              duration: prefersReducedMotion ? 0 : 0.4,
+              ease: [0.16, 1, 0.3, 1],
+            }}
           >
             {currentStep === 0 ? (
               <StepProjectType control={control} errors={errors} />
@@ -172,6 +163,7 @@ export function DevisForm() {
 
           {isLastStep ? (
             <Button
+              key="submit"
               type="submit"
               disabled={isSubmitting}
               className="bg-brand-blue text-white hover:bg-brand-blue-light disabled:opacity-60"
@@ -187,6 +179,7 @@ export function DevisForm() {
             </Button>
           ) : (
             <Button
+              key="next"
               type="button"
               onClick={handleNext}
               className="bg-brand-blue text-white hover:bg-brand-blue-light"

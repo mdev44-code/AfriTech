@@ -59,7 +59,7 @@ export async function cancelAppointment(appointmentId: string): Promise<ActionRe
   const resend = getResendClient();
   if (resend) {
     try {
-      await resend.emails.send({
+      const { error } = await resend.emails.send({
         from: process.env.EMAIL_FROM ?? "Afritech <onboarding@resend.dev>",
         to: appointment.email,
         subject: "Votre rendez-vous a été annulé",
@@ -68,6 +68,18 @@ export async function cancelAppointment(appointmentId: string): Promise<ActionRe
           scheduledAt: appointment.scheduledAt,
         }),
       });
+
+      if (error) {
+        console.error(
+          "[actions/rendez-vous] Échec de l'envoi de l'email d'annulation",
+          error,
+        );
+        revalidateRendezVous();
+        return {
+          success: false,
+          error: "Rendez-vous annulé, mais l'email n'a pas pu être envoyé.",
+        };
+      }
     } catch (error) {
       console.error(
         "[actions/rendez-vous] Échec de l'envoi de l'email d'annulation",

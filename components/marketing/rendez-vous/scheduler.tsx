@@ -2,12 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-  type Variants,
-} from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CalendarCheck, CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -25,12 +20,6 @@ import { DayPicker } from "./day-picker";
 import { TimeSlots } from "./time-slots";
 
 type Step = "calendar" | "contact" | "success";
-
-const stepVariants: Variants = {
-  enter: (direction: number) => ({ x: direction >= 0 ? 32 : -32, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (direction: number) => ({ x: direction >= 0 ? -32 : 32, opacity: 0 }),
-};
 
 function formatSelectedSlot(day: AvailabilityDay, time: string) {
   const label = day.date.toLocaleDateString("fr-FR", {
@@ -192,15 +181,16 @@ export function Scheduler({ initialDays }: SchedulerProps) {
         noValidate
         className="mt-8 overflow-hidden"
       >
-        <AnimatePresence mode="wait" custom={direction} initial={false}>
+        <AnimatePresence initial={false}>
           <motion.div
             key={step}
-            custom={direction}
-            variants={prefersReducedMotion ? undefined : stepVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ x: direction >= 0 ? 32 : -32, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: direction >= 0 ? -32 : 32, opacity: 0 }}
+            transition={{
+              duration: prefersReducedMotion ? 0 : 0.4,
+              ease: [0.16, 1, 0.3, 1],
+            }}
           >
             {step === "calendar" ? (
               <div>
@@ -264,6 +254,7 @@ export function Scheduler({ initialDays }: SchedulerProps) {
 
           {step === "calendar" ? (
             <Button
+              key="continue"
               type="button"
               onClick={handleContinue}
               disabled={!selectedDate || !selectedTime}
@@ -273,6 +264,7 @@ export function Scheduler({ initialDays }: SchedulerProps) {
             </Button>
           ) : (
             <Button
+              key="submit"
               type="submit"
               disabled={isSubmitting}
               className="bg-brand-blue text-white hover:bg-brand-blue-light disabled:opacity-60"
