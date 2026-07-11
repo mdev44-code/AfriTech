@@ -22,7 +22,11 @@ export function StepProjectType({ control, errors }: StepProjectTypeProps) {
         control={control}
         name="projectType"
         render={({ field }) => (
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <div
+            role="radiogroup"
+            aria-label="Type de projet"
+            className="mt-6 grid gap-3 sm:grid-cols-2"
+          >
             {PROJECT_TYPES.map((type) => {
               const isSelected = field.value === type.value;
 

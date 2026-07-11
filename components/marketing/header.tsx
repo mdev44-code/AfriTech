@@ -35,6 +35,15 @@ export function Header() {
     };
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsMenuOpen(false);
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMenuOpen]);
+
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
@@ -49,7 +58,7 @@ export function Header() {
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
           <Link href="/" onClick={closeMenu} aria-label="Afritech — Accueil">
-            <Logo size="md" />
+            <Logo size="md" priority />
           </Link>
 
           <nav className="hidden items-center gap-10 md:flex">

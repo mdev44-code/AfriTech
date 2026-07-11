@@ -49,7 +49,7 @@ export function Sidebar({ isMobileOpen, onCloseMobile }: SidebarProps) {
         )}
       >
         <div className="flex items-center justify-between px-6 py-6">
-          <Logo size="sm" />
+          <Logo size="sm" priority />
           <button
             type="button"
             onClick={onCloseMobile}

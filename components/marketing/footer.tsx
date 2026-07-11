@@ -175,7 +175,7 @@ export function Footer() {
             </p>
 
             {isSubscribed ? (
-              <p className="mt-4 text-sm text-brand-blue-light">
+              <p className="mt-4 text-sm text-text-primary">
                 Merci, vous êtes inscrit·e !
               </p>
             ) : (

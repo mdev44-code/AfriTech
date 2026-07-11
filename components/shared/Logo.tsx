@@ -14,16 +14,17 @@ type LogoSize = keyof typeof LOGO_HEIGHT_CLASSES;
 interface LogoProps {
   size?: LogoSize;
   className?: string;
+  priority?: boolean;
 }
 
-export function Logo({ size = "md", className }: LogoProps) {
+export function Logo({ size = "md", className, priority = false }: LogoProps) {
   return (
     <Image
       src="/logo.png"
       alt="Afritech"
       width={2000}
       height={600}
-      priority
+      priority={priority}
       className={cn("w-auto", LOGO_HEIGHT_CLASSES[size], className)}
     />
   );

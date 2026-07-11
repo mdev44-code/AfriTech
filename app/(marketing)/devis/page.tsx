@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
+
 import { DevisForm } from "@/components/marketing/devis/devis-form";
+
+export const metadata: Metadata = {
+  title: "Demander un devis",
+  description:
+    "Décrivez votre projet en quatre étapes rapides et recevez une proposition adaptée sous 24 à 48h.",
+};
 
 export default function DevisPage() {
   return (

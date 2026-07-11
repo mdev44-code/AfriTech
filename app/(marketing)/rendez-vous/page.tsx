@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
+
 import { Scheduler } from "@/components/marketing/rendez-vous/scheduler";
 import { generateAvailability } from "@/lib/data/availability";
+
+export const metadata: Metadata = {
+  title: "Planifier un rendez-vous",
+  description:
+    "Choisissez un créneau disponible et échangez avec notre équipe sur votre projet web, mobile, automatisation ou IA.",
+};
 
 export default async function RendezVousPage() {
   const initialDays = await generateAvailability(14);

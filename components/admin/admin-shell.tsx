@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { UserRole } from "@prisma/client";
 
 import { Sidebar } from "@/components/admin/sidebar";
@@ -16,6 +16,15 @@ interface AdminShellProps {
 
 export function AdminShell({ user, children }: AdminShellProps) {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isMobileNavOpen) return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsMobileNavOpen(false);
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMobileNavOpen]);
 
   return (
     <div className="flex min-h-screen bg-background">

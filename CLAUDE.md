@@ -150,5 +150,5 @@ _(à mettre à jour au fil de l'avancement)_
 - [x] Phase 7 — Gestion des devis
 - [x] Phase 8 — Gestion des rendez-vous
 - [x] Phase 9 — CMS dynamique des sections
-- [ ] Phase 10 — Polish, performance, SEO, QA
+- [x] Phase 10 — Polish, performance, SEO, QA
 - [ ] Phase 11 — Déploiement

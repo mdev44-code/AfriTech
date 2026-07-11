@@ -22,7 +22,11 @@ export function StepBudget({ control, errors }: StepBudgetProps) {
         control={control}
         name="budget"
         render={({ field }) => (
-          <div className="mt-6 flex flex-col gap-3">
+          <div
+            role="radiogroup"
+            aria-label="Budget"
+            className="mt-6 flex flex-col gap-3"
+          >
             {BUDGET_RANGES.map((range) => {
               const isSelected = field.value === range.value;
 

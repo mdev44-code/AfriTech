@@ -111,7 +111,7 @@ export function Projects({ title, description }: ProjectsProps) {
                     </div>
 
                     <div className="p-5">
-                      <span className="text-xs font-medium uppercase tracking-wide text-brand-blue-light">
+                      <span className="text-xs font-medium uppercase tracking-wide text-text-primary">
                         {project.category}
                       </span>
                       <h3 className="mt-2 text-lg font-semibold text-text-primary">

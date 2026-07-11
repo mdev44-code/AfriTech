@@ -93,8 +93,8 @@ export function Process({ title, description }: ProcessProps) {
           {
             opacity: 1,
             y: 0,
-            duration: 0.7,
-            ease: "power3.out",
+            duration: 0.6,
+            ease: "expo.out",
             scrollTrigger: {
               trigger: step,
               start: "top 82%",
@@ -147,7 +147,7 @@ export function Process({ title, description }: ProcessProps) {
                 }}
                 className="relative opacity-0"
               >
-                <span className="absolute -left-12 top-0 flex h-9 w-9 items-center justify-center rounded-full border border-brand-blue-light/40 bg-surface text-xs font-semibold text-brand-blue-light sm:-left-16 sm:h-10 sm:w-10 sm:text-sm">
+                <span className="absolute -left-12 top-0 flex h-9 w-9 items-center justify-center rounded-full border border-brand-blue-light/40 bg-surface text-xs font-semibold text-text-primary sm:-left-16 sm:h-10 sm:w-10 sm:text-sm">
                   {step.number}
                 </span>
                 <h3 className="text-xl font-semibold text-text-primary">

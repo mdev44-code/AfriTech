@@ -121,7 +121,7 @@ export function CreateSectionForm({ onCreated, onCancel }: CreateSectionFormProp
           className="border-white/10 bg-background text-text-primary placeholder:text-text-secondary focus-visible:ring-brand-blue-light"
           {...register("name")}
         />
-        {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
+        {errors.name && <p className="text-sm text-red-400">{errors.name.message}</p>}
       </div>
 
       <div className="space-y-2">
@@ -150,7 +150,7 @@ export function CreateSectionForm({ onCreated, onCancel }: CreateSectionFormProp
           className="border-white/10 bg-background text-text-primary placeholder:text-text-secondary focus-visible:ring-brand-blue-light"
           {...register("title")}
         />
-        {errors.title && <p className="text-sm text-destructive">{errors.title.message}</p>}
+        {errors.title && <p className="text-sm text-red-400">{errors.title.message}</p>}
       </div>
 
       {(type === "custom-rich-text" || type === "custom-image-text") && (
@@ -235,7 +235,7 @@ export function CreateSectionForm({ onCreated, onCancel }: CreateSectionFormProp
       )}
 
       {serverError && (
-        <p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        <p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-red-400">
           {serverError}
         </p>
       )}
