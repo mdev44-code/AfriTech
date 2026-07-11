@@ -1,6 +1,16 @@
 import type { QuoteRequest, Quote, QuoteLine } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { BUDGET_RANGES, PROJECT_TYPES } from "@/lib/validations/devis";
+
+export function getProjectTypeLabel(value: string): string {
+  return PROJECT_TYPES.find((type) => type.value === value)?.label ?? value;
+}
+
+export function getBudgetLabel(value: string | null): string {
+  if (!value) return "—";
+  return BUDGET_RANGES.find((range) => range.value === value)?.label ?? value;
+}
 
 export const DEVIS_DISPLAY_STATUSES = [
   "NOUVEAU",

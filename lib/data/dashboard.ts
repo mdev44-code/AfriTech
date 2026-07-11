@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { getProjectTypeLabel } from "@/lib/data/devis";
 
 export interface DashboardStats {
   pendingQuoteRequests: number;
@@ -56,7 +57,7 @@ export async function getRecentActivity(limit = 8): Promise<ActivityItem[]> {
       type: "quote_request" as const,
       id: quoteRequest.id,
       label: `Nouvelle demande de devis — ${quoteRequest.name}`,
-      detail: quoteRequest.projectType,
+      detail: getProjectTypeLabel(quoteRequest.projectType),
       createdAt: quoteRequest.createdAt,
     })),
     ...appointments.map((appointment) => ({

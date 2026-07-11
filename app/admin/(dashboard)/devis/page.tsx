@@ -4,6 +4,8 @@ import Link from "next/link";
 import {
   listQuoteRequests,
   getDisplayStatus,
+  getBudgetLabel,
+  getProjectTypeLabel,
   DEVIS_DISPLAY_STATUSES,
   type DevisDisplayStatus,
 } from "@/lib/data/devis";
@@ -80,8 +82,8 @@ export default async function AdminDevisPage({
                       {quoteRequest.email}
                     </p>
                   </TableCell>
-                  <TableCell>{quoteRequest.projectType}</TableCell>
-                  <TableCell>{quoteRequest.budget ?? "—"}</TableCell>
+                  <TableCell>{getProjectTypeLabel(quoteRequest.projectType)}</TableCell>
+                  <TableCell>{getBudgetLabel(quoteRequest.budget)}</TableCell>
                   <TableCell>
                     {quoteRequest.createdAt.toLocaleDateString("fr-FR", {
                       day: "2-digit",

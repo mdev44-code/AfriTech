@@ -3,7 +3,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-import { getQuoteRequestById, getDisplayStatus } from "@/lib/data/devis";
+import {
+  getQuoteRequestById,
+  getDisplayStatus,
+  getBudgetLabel,
+  getProjectTypeLabel,
+} from "@/lib/data/devis";
 import { DevisStatusBadge } from "@/components/admin/devis/status-badge";
 import { QuoteForm } from "@/components/admin/devis/quote-form";
 import { QuoteActions } from "@/components/admin/devis/quote-actions";
@@ -72,11 +77,11 @@ export default async function AdminDevisDetailPage({
           <dl className="space-y-3 text-sm">
             <div>
               <dt className="text-text-secondary">Type de projet</dt>
-              <dd className="text-text-primary">{quoteRequest.projectType}</dd>
+              <dd className="text-text-primary">{getProjectTypeLabel(quoteRequest.projectType)}</dd>
             </div>
             <div>
               <dt className="text-text-secondary">Budget</dt>
-              <dd className="text-text-primary">{quoteRequest.budget ?? "—"}</dd>
+              <dd className="text-text-primary">{getBudgetLabel(quoteRequest.budget)}</dd>
             </div>
             <div>
               <dt className="text-text-secondary">Reçue le</dt>
