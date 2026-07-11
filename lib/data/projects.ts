@@ -1,19 +1,38 @@
-export type ProjectCategory = "Web" | "Mobile" | "Automatisation" | "IA";
+import type { Project, ProjectStatus } from "@prisma/client";
 
-export interface Project {
-  id: string;
-  title: string;
-  category: ProjectCategory;
+import { db } from "@/lib/db";
+import type { ProjectCategory } from "@/lib/validations/project";
+
+export type { ProjectCategory };
+
+export interface ListAdminProjectsOptions {
+  search?: string;
+  status?: ProjectStatus;
 }
 
-export const PROJECTS: Project[] = [
-  { id: "plateforme-ecommerce", title: "Plateforme e-commerce", category: "Web" },
-  { id: "site-vitrine", title: "Site vitrine sur-mesure", category: "Web" },
-  { id: "dashboard-analytics", title: "Dashboard analytics temps réel", category: "Web" },
-  { id: "app-livraison", title: "Application de livraison", category: "Mobile" },
-  { id: "app-reservation", title: "App de réservation en ligne", category: "Mobile" },
-  { id: "automatisation-facturation", title: "Automatisation de la facturation", category: "Automatisation" },
-  { id: "workflow-crm", title: "Workflow CRM automatisé", category: "Automatisation" },
-  { id: "assistant-support", title: "Assistant IA support client", category: "IA" },
-  { id: "chatbot-multilingue", title: "Chatbot IA multilingue", category: "IA" },
-];
+export async function listAdminProjects(
+  options: ListAdminProjectsOptions = {},
+): Promise<Project[]> {
+  const { search, status } = options;
+
+  return db.project.findMany({
+    where: {
+      ...(status ? { status } : {}),
+      ...(search
+        ? { title: { contains: search, mode: "insensitive" } }
+        : {}),
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getProjectById(id: string): Promise<Project | null> {
+  return db.project.findUnique({ where: { id } });
+}
+
+export async function listPublishedProjects(): Promise<Project[]> {
+  return db.project.findMany({
+    where: { status: "PUBLISHED" },
+    orderBy: [{ featured: "desc" }, { year: "desc" }, { createdAt: "desc" }],
+  });
+}
