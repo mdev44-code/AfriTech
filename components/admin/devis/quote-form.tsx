@@ -8,24 +8,24 @@ import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   quoteFormSchema,
   type QuoteFormValues,
 } from "@/lib/validations/quote";
 import { saveQuoteDraft, sendQuote } from "@/lib/actions/devis";
+import {
+  CURRENCIES,
+  CURRENCY_LABELS,
+  CURRENCY_SYMBOLS,
+  formatCurrency,
+} from "@/lib/currency";
 
 interface QuoteFormProps {
   quoteRequestId: string;
   defaultValues: QuoteFormValues;
   readOnly: boolean;
-}
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-  }).format(value);
 }
 
 export function QuoteForm({
@@ -55,6 +55,7 @@ export function QuoteForm({
   });
 
   const lines = watch("lines");
+  const currency = watch("currency");
   const total = lines.reduce(
     (sum, line) => sum + (Number(line.price) || 0) * (Number(line.quantity) || 0),
     0,
@@ -95,6 +96,17 @@ export function QuoteForm({
 
   return (
     <div className="space-y-6">
+      <div className="max-w-[220px]">
+        <Label htmlFor="currency">Devise</Label>
+        <Select id="currency" disabled={readOnly} {...register("currency")}>
+          {CURRENCIES.map((code) => (
+            <option key={code} value={code}>
+              {CURRENCY_LABELS[code]}
+            </option>
+          ))}
+        </Select>
+      </div>
+
       <div className="space-y-3">
         {fields.map((field, index) => (
           <div
@@ -128,7 +140,9 @@ export function QuoteForm({
               />
             </div>
             <div>
-              <Label htmlFor={`lines.${index}.price`}>Prix unitaire (€)</Label>
+              <Label htmlFor={`lines.${index}.price`}>
+                Prix unitaire ({CURRENCY_SYMBOLS[currency]})
+              </Label>
               <Input
                 id={`lines.${index}.price`}
                 type="number"
@@ -183,7 +197,7 @@ export function QuoteForm({
       <div className="flex items-center justify-between rounded-lg border border-white/5 bg-surface p-4">
         <span className="text-sm font-medium text-text-secondary">Total</span>
         <span className="text-xl font-semibold text-text-primary">
-          {formatCurrency(total)}
+          {formatCurrency(total, currency)}
         </span>
       </div>
 

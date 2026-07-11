@@ -14,6 +14,7 @@ import fs from "node:fs";
 import type { Quote, QuoteLine, QuoteRequest } from "@prisma/client";
 
 import { getBudgetLabel, getProjectTypeLabel } from "@/lib/data/devis";
+import { formatCurrency } from "@/lib/currency";
 
 // Avoids a network fetch to react-pdf's default hyphenation dictionary.
 Font.registerHyphenationCallback((word) => [word]);
@@ -173,13 +174,6 @@ const styles = StyleSheet.create({
   },
 });
 
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-  }).format(value);
-}
-
 function formatDate(value: Date): string {
   return new Intl.DateTimeFormat("fr-FR", {
     day: "2-digit",
@@ -270,10 +264,10 @@ function QuoteDocument({ quote, quoteRequest }: QuoteDocumentProps) {
                   {line.quantity}
                 </Text>
                 <Text style={[styles.tableCellText, styles.colPrice]}>
-                  {formatCurrency(Number(line.price))}
+                  {formatCurrency(Number(line.price), quote.currency)}
                 </Text>
                 <Text style={[styles.tableCellText, styles.colTotal]}>
-                  {formatCurrency(Number(line.price) * line.quantity)}
+                  {formatCurrency(Number(line.price) * line.quantity, quote.currency)}
                 </Text>
               </View>
             ))}
@@ -283,7 +277,7 @@ function QuoteDocument({ quote, quoteRequest }: QuoteDocumentProps) {
             <View style={styles.totalBox}>
               <Text style={styles.totalLabel}>Total</Text>
               <Text style={styles.totalValue}>
-                {formatCurrency(Number(quote.total))}
+                {formatCurrency(Number(quote.total), quote.currency)}
               </Text>
             </View>
           </View>

@@ -43,6 +43,7 @@ export default async function AdminDevisDetailPage({
           quantity: line.quantity,
           price: Number(line.price),
         })),
+        currency: quote.currency,
         conditions: quote.conditions ?? "",
       }
     : QUOTE_FORM_DEFAULT_VALUES;

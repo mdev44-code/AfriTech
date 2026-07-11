@@ -7,6 +7,7 @@ import { getResendClient } from "@/lib/resend";
 import { generateQuotePdf } from "@/lib/pdf/quote-document";
 import { renderQuoteSentEmail } from "@/lib/email/quote-sent";
 import { quoteFormSchema, type QuoteFormValues } from "@/lib/validations/quote";
+import { formatCurrency } from "@/lib/currency";
 
 export interface ActionResult {
   success: boolean;
@@ -34,7 +35,7 @@ export async function saveQuoteDraft(
     return { success: false, error: "Formulaire invalide." };
   }
 
-  const { lines, conditions } = parsed.data;
+  const { lines, currency, conditions } = parsed.data;
   const total = computeTotal(lines);
 
   const quoteRequest = await db.quoteRequest.findUnique({
@@ -55,6 +56,7 @@ export async function saveQuoteDraft(
         where: { id: quoteRequest.quote.id },
         data: {
           total,
+          currency,
           conditions: conditions || null,
           lines: { create: lines },
         },
@@ -64,6 +66,7 @@ export async function saveQuoteDraft(
         data: {
           quoteRequestId,
           total,
+          currency,
           conditions: conditions || null,
           lines: { create: lines },
         },
@@ -102,10 +105,7 @@ export async function sendQuote(quoteRequestId: string): Promise<ActionResult> {
 
   const pdfBuffer = await generateQuotePdf(quoteRequest.quote, quoteRequest);
   const reference = `DEVIS-${quoteRequest.quote.id.slice(-8).toUpperCase()}`;
-  const total = new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-  }).format(Number(quoteRequest.quote.total));
+  const total = formatCurrency(Number(quoteRequest.quote.total), quoteRequest.quote.currency);
 
   try {
     const { error } = await resend.emails.send({

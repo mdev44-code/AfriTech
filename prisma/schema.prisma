@@ -28,6 +28,12 @@ enum QuoteStatus {
   EXPIRED
 }
 
+enum Currency {
+  EUR
+  USD
+  XOF
+}
+
 enum AppointmentStatus {
   PENDING
   CONFIRMED
@@ -83,6 +89,7 @@ model Quote {
   quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
   lines          QuoteLine[]
   total          Decimal      @db.Decimal(10, 2)
+  currency       Currency     @default(XOF)
   conditions     String?      @db.Text
   status         QuoteStatus  @default(DRAFT)
   sentAt         DateTime?
