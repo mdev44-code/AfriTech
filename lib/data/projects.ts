@@ -31,8 +31,13 @@ export async function getProjectById(id: string): Promise<Project | null> {
 }
 
 export async function listPublishedProjects(): Promise<Project[]> {
-  return db.project.findMany({
-    where: { status: "PUBLISHED" },
-    orderBy: [{ featured: "desc" }, { year: "desc" }, { createdAt: "desc" }],
-  });
+  try {
+    return await db.project.findMany({
+      where: { status: "PUBLISHED" },
+      orderBy: [{ featured: "desc" }, { year: "desc" }, { createdAt: "desc" }],
+    });
+  } catch (error) {
+    console.error("[listPublishedProjects] Database unreachable", error);
+    return [];
+  }
 }

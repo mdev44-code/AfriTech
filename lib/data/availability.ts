@@ -38,12 +38,17 @@ function isEnabledByDefault(weekday: number): boolean {
 }
 
 async function loadRulesMap(): Promise<Map<string, boolean>> {
-  const rules = await db.availabilityRule.findMany();
-  const map = new Map<string, boolean>();
-  for (const rule of rules) {
-    map.set(`${rule.weekday}-${rule.time}`, rule.enabled);
+  try {
+    const rules = await db.availabilityRule.findMany();
+    const map = new Map<string, boolean>();
+    for (const rule of rules) {
+      map.set(`${rule.weekday}-${rule.time}`, rule.enabled);
+    }
+    return map;
+  } catch (error) {
+    console.error("[loadRulesMap] Database unreachable, using defaults", error);
+    return new Map();
   }
-  return map;
 }
 
 function resolveEnabled(
@@ -80,16 +85,21 @@ export async function generateAvailability(
   const rangeEnd = new Date(rangeStart);
   rangeEnd.setDate(rangeEnd.getDate() + daysCount);
 
-  const bookedAppointments = await db.appointment.findMany({
-    where: {
-      scheduledAt: { gte: rangeStart, lt: rangeEnd },
-      status: { not: "CANCELLED" },
-    },
-    select: { scheduledAt: true },
-  });
-  const bookedTimes = new Set(
-    bookedAppointments.map((appointment) => appointment.scheduledAt.toISOString())
-  );
+  let bookedTimes = new Set<string>();
+  try {
+    const bookedAppointments = await db.appointment.findMany({
+      where: {
+        scheduledAt: { gte: rangeStart, lt: rangeEnd },
+        status: { not: "CANCELLED" },
+      },
+      select: { scheduledAt: true },
+    });
+    bookedTimes = new Set(
+      bookedAppointments.map((appointment) => appointment.scheduledAt.toISOString())
+    );
+  } catch (error) {
+    console.error("[generateAvailability] Database unreachable, assuming no bookings", error);
+  }
 
   const days: AvailabilityDay[] = [];
 

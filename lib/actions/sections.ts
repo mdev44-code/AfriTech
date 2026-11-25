@@ -134,7 +134,9 @@ export async function resetBuiltinSectionContent(id: string): Promise<ActionResu
     section.content && typeof section.content === "object" && !Array.isArray(section.content)
       ? (section.content as Record<string, unknown>)
       : {};
-  const { title: _title, description: _description, ...rest } = existingContent;
+  const { title, description, ...rest } = existingContent;
+  void title;
+  void description;
 
   await db.section.update({
     where: { id },
