@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db, ensureDb, markDbDown } from "@/lib/db";
 
 export const TIME_SLOTS = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"];
 
@@ -38,6 +38,7 @@ function isEnabledByDefault(weekday: number): boolean {
 }
 
 async function loadRulesMap(): Promise<Map<string, boolean>> {
+  if (!(await ensureDb())) return new Map();
   try {
     const rules = await db.availabilityRule.findMany();
     const map = new Map<string, boolean>();
@@ -45,8 +46,8 @@ async function loadRulesMap(): Promise<Map<string, boolean>> {
       map.set(`${rule.weekday}-${rule.time}`, rule.enabled);
     }
     return map;
-  } catch (error) {
-    console.error("[loadRulesMap] Database unreachable, using defaults", error);
+  } catch {
+    markDbDown();
     return new Map();
   }
 }
@@ -86,19 +87,21 @@ export async function generateAvailability(
   rangeEnd.setDate(rangeEnd.getDate() + daysCount);
 
   let bookedTimes = new Set<string>();
-  try {
-    const bookedAppointments = await db.appointment.findMany({
-      where: {
-        scheduledAt: { gte: rangeStart, lt: rangeEnd },
-        status: { not: "CANCELLED" },
-      },
-      select: { scheduledAt: true },
-    });
-    bookedTimes = new Set(
-      bookedAppointments.map((appointment) => appointment.scheduledAt.toISOString())
-    );
-  } catch (error) {
-    console.error("[generateAvailability] Database unreachable, assuming no bookings", error);
+  if (await ensureDb()) {
+    try {
+      const bookedAppointments = await db.appointment.findMany({
+        where: {
+          scheduledAt: { gte: rangeStart, lt: rangeEnd },
+          status: { not: "CANCELLED" },
+        },
+        select: { scheduledAt: true },
+      });
+      bookedTimes = new Set(
+        bookedAppointments.map((appointment) => appointment.scheduledAt.toISOString())
+      );
+    } catch {
+      markDbDown();
+    }
   }
 
   const days: AvailabilityDay[] = [];

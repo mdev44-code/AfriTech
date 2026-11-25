@@ -1,6 +1,6 @@
 import type { Project, ProjectStatus } from "@prisma/client";
 
-import { db } from "@/lib/db";
+import { db, ensureDb, markDbDown } from "@/lib/db";
 import type { ProjectCategory } from "@/lib/validations/project";
 
 export type { ProjectCategory };
@@ -31,13 +31,14 @@ export async function getProjectById(id: string): Promise<Project | null> {
 }
 
 export async function listPublishedProjects(): Promise<Project[]> {
+  if (!(await ensureDb())) return [];
   try {
     return await db.project.findMany({
       where: { status: "PUBLISHED" },
       orderBy: [{ featured: "desc" }, { year: "desc" }, { createdAt: "desc" }],
     });
-  } catch (error) {
-    console.error("[listPublishedProjects] Database unreachable", error);
+  } catch {
+    markDbDown();
     return [];
   }
 }
